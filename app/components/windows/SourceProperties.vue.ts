@@ -6,6 +6,7 @@ import { TFormData } from 'components/shared/forms/Input';
 import { WindowsService } from 'services/windows';
 import windowMixin from 'components/mixins/window';
 import { ISourcesServiceApi } from 'services/sources';
+import { IScenesServiceApi } from '../../services/scenes';
 
 import ModalLayout from 'components/ModalLayout.vue';
 import Display from 'components/shared/Display.vue';
@@ -25,10 +26,14 @@ export default class SourceProperties extends Vue {
   @Inject()
   sourcesService: ISourcesServiceApi;
 
+  @Inject() 
+  scenesService: IScenesServiceApi;
+
   @Inject()
   windowsService: WindowsService;
 
   sourceId = this.windowsService.getChildWindowQueryParams().sourceId;
+  initial = this.windowsService.getChildWindowQueryParams().initial;
   source = this.sourcesService.getSource(this.sourceId);
   properties: TFormData = [];
   initialProperties: TFormData = [];
@@ -61,7 +66,36 @@ export default class SourceProperties extends Vue {
   }
 
   done() {
+    this.initialFitToScreen();
     this.closeWindow();
+  }
+
+  initialFitToScreen() {
+    if (this.isRequireFitToScreen()){
+      const activeSceneItems = this.scenesService.activeScene.getItems();
+      activeSceneItems.forEach(element => {
+        if (element.sourceId === this.sourceId) {
+          element.fitToScreen();
+        }
+      });
+    }
+  }
+
+  isRequireFitToScreen() {
+    if (this.initial) {
+      switch(this.source.type) {
+        case 'text_ft2_source':
+        case 'text_gdiplus':
+        case 'color_source':
+        case 'wasapi_input_capture':
+        case 'wasapi_output_capture':
+          return false
+        default:
+          return true
+      }
+    }else{
+      return false 
+    }
   }
 
   cancel() {
@@ -71,6 +105,7 @@ export default class SourceProperties extends Vue {
         this.initialProperties
       );
     }
+    this.initialFitToScreen();
     this.closeWindow();
   }
 
