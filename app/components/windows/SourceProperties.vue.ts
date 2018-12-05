@@ -6,7 +6,8 @@ import { TFormData } from 'components/shared/forms/Input';
 import { WindowsService } from 'services/windows';
 import windowMixin from 'components/mixins/window';
 import { ISourcesServiceApi } from 'services/sources';
-import { IScenesServiceApi } from '../../services/scenes';
+import { IScenesServiceApi, ISceneItemApi } from '../../services/scenes';
+import { MonitorCaptureCroppingService } from 'services/sources/monitor-capture-cropping';
 
 import ModalLayout from 'components/ModalLayout.vue';
 import Display from 'components/shared/Display.vue';
@@ -27,10 +28,13 @@ export default class SourceProperties extends Vue {
   sourcesService: ISourcesServiceApi;
 
   @Inject() 
-  scenesService: IScenesServiceApi;
+  private scenesService: IScenesServiceApi;
 
   @Inject()
   windowsService: WindowsService;
+
+  @Inject() 
+  private monitorCaptureCroppingService: MonitorCaptureCroppingService;
 
   sourceId = this.windowsService.getChildWindowQueryParams().sourceId;
   initial = this.windowsService.getChildWindowQueryParams().initial;
@@ -66,22 +70,42 @@ export default class SourceProperties extends Vue {
   }
 
   done() {
+    this.initlalMonitorCaptureCrop();
     this.initialFitToScreen();
     this.closeWindow();
   }
 
+  applyFunctionToThis(func: (sceneItem: ISceneItemApi) => void) {
+    const activeSceneItems = this.scenesService.activeScene.getItems();
+    activeSceneItems.forEach(sceneItem => {
+      if (sceneItem.sourceId === this.sourceId) {
+        func(sceneItem)
+      }
+    });
+  }
+
+  initlalMonitorCaptureCrop() {
+    if(this.initial && this.source.type === 'monitor_capture'){
+      this.applyFunctionToThis((sceneItem: ISceneItemApi) => {
+        this.monitorCaptureCroppingService.startCropping(
+          this.scenesService.activeScene.id,
+          sceneItem.sceneItemId,
+          sceneItem.sourceId
+        );
+      });
+    }
+  }
+
   initialFitToScreen() {
     if (this.isRequireFitToScreen()){
-      const activeSceneItems = this.scenesService.activeScene.getItems();
-      activeSceneItems.forEach(element => {
-        if (element.sourceId === this.sourceId) {
-          element.fitToScreen();
-        }
+      this.applyFunctionToThis((sceneItem: ISceneItemApi) => {
+        sceneItem.fitToScreen();
       });
     }
   }
 
   isRequireFitToScreen() {
+    console.log('isRequireFitToScreen',this.initial,this.source.type)
     if (this.initial) {
       switch(this.source.type) {
         case 'text_ft2_source':
