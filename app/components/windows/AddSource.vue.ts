@@ -53,7 +53,8 @@ export default class AddSource extends Vue {
       alert($t('sources.circularReferenceMessage'));
       return;
     }
-    this.scenesService.activeScene.addSource(this.selectedSourceId);
+    const addedItem = this.scenesService.activeScene.addSource(this.selectedSourceId);
+    addedItem.fitToScreen();
     this.close();
   }
 
@@ -80,7 +81,7 @@ export default class AddSource extends Vue {
       this.scenesService.activeScene.addSource(source.sourceId);
 
       this.close();
-      if (source.hasProps()) this.sourcesService.showSourceProperties(source.sourceId);
+      if (source.hasProps()) this.sourcesService.showSourceProperties(source.sourceId, true);
     }
   }
 
