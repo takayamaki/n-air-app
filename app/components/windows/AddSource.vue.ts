@@ -9,6 +9,7 @@ import ModalLayout from 'components/ModalLayout.vue';
 import Selector from 'components/Selector.vue';
 import Display from 'components/shared/Display.vue';
 import { $t } from 'services/i18n';
+import autoFitToScreen from '../../util/autoFitToScreen'
 
 @Component({
   components: { ModalLayout, Selector, Display },
@@ -54,7 +55,7 @@ export default class AddSource extends Vue {
       return;
     }
     const addedItem = this.scenesService.activeScene.addSource(this.selectedSourceId);
-    addedItem.fitToScreen();
+    if (autoFitToScreen.isRequired(addedItem.getSource())) addedItem.fitToScreen();
     this.close();
   }
 

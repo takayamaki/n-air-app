@@ -12,6 +12,7 @@ import ModalLayout from 'components/ModalLayout.vue';
 import Display from 'components/shared/Display.vue';
 import GenericForm from 'components/shared/forms/GenericForm.vue';
 import { $t } from 'services/i18n';
+import autoFitToScreen from '../../util/autoFitToScreen'
 
 @Component({
   components: {
@@ -71,30 +72,13 @@ export default class SourceProperties extends Vue {
   }
 
   initialFitToScreen() {
-    if (this.isRequireFitToScreen()){
+    if (this.initial && autoFitToScreen.isRequired(this.source)){
       const activeSceneItems = this.scenesService.activeScene.getItems();
       activeSceneItems.forEach(element => {
         if (element.sourceId === this.sourceId) {
           element.fitToScreen();
         }
       });
-    }
-  }
-
-  isRequireFitToScreen() {
-    if (this.initial) {
-      switch(this.source.type) {
-        case 'text_ft2_source':
-        case 'text_gdiplus':
-        case 'color_source':
-        case 'wasapi_input_capture':
-        case 'wasapi_output_capture':
-          return false
-        default:
-          return true
-      }
-    }else{
-      return false 
     }
   }
 
