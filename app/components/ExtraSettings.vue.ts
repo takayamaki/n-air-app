@@ -12,6 +12,7 @@ import { StreamingService } from 'services/streaming';
 import { AppService } from 'services/app';
 import { $t } from 'services/i18n';
 import { QuestionaireService } from 'services/questionaire';
+import { ObsImporterService } from '../services/obs-importer';
 const ClipBoardCopy = require('../../media/images/clipboard-copy.svg');
 
 @Component({
@@ -29,6 +30,7 @@ export default class ExtraSettings extends Vue {
   @Inject() streamingService: StreamingService;
   @Inject() appService: AppService;
   @Inject() questionaireService: QuestionaireService;
+  @Inject() obsImporterService: ObsImporterService;
 
   cacheUploading = false;
   showCacheId = false;
@@ -92,6 +94,23 @@ export default class ExtraSettings extends Vue {
       )
     ) {
       this.appService.relaunch({ clearCacheDir: true });
+    }
+  }
+
+  async importSettings() {
+    if (
+      confirm(
+        $t('settings.importSettingsFromObsConfirm')
+      )
+    ) {
+      const profiles = this.obsImporterService.getProfiles();
+      const selectedProfile = profiles[0] || '';
+
+      try {
+        await this.obsImporterService.load(selectedProfile);
+      } catch (e) {
+        console.error(e)
+      }
     }
   }
 

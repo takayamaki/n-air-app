@@ -558,6 +558,8 @@
   "noticeForStreaming": "These settings are filled automatically{br}while you are logged in to niconico.",
   "showCacheDirectory": "Show Cache Directory",
   "deleteCacheAndRestart": "Delete Cache and Restart",
+  "importSettingsFromObs": "Import settings from OBS Studio",
+  "importSettingsFromObsConfirm": "WARNING! Exists scenes, sources, and settings will override. Are you sure?",
   "confirmStreamTitleAndGameBeforeGoingLive": "Confirm stream title and game before going live",
   "clearCacheConfirm": "WARNING! You will lose all scenes, sources, and settings. This cannot be undone!",
   "restartConfirm": "This action will restart the application. Continue?",

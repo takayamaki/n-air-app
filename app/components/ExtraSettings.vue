@@ -28,6 +28,10 @@
       {{ $t('settings.deleteCacheAndRestart') }}
     </a>
 
+    <a class="button button--action" @click="importSettings">
+      {{ $t('settings.importSettingsFromObs') }}
+    </a>
+
     <div class="input-label">
       <label for="cacheId">{{ $t('settings.cacheId')}}</label>
     </div>

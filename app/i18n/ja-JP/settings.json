@@ -558,6 +558,8 @@
   "noticeForStreaming": "niconicoにログインしている場合、{br}これらの項目はニコニコ生放送用に自動で設定されます。",
   "showCacheDirectory": "キャッシュディレクトリを表示",
   "deleteCacheAndRestart": "キャッシュを削除して再起動",
+  "importSettingsFromObs": "OBS Studioから設定を取り込む",
+  "importSettingsFromObsConfirm": "警告: すべてのシーン、ソース、設定が上書きされます。この操作は元に戻せません。",
   "confirmStreamTitleAndGameBeforeGoingLive": "ライブになる前にストリームのタイトルとゲームを確認して下さい。",
   "clearCacheConfirm": "警告: すべてのシーン、ソース、設定を抹消します。この操作は元に戻せません。",
   "restartConfirm": "N Airを再起動します。よろしいですか？",
