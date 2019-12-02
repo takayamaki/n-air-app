@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 jobs:
-  build:
+  yarn-install:
     runs-on: windows-latest
     steps:
         - uses: actions/checkout@v1
@@ -12,12 +12,30 @@ jobs:
             node-version: '10.x'
         - uses: actions/cache@v1
           with:
-            path: ~/.cache/yarn
+            path: ${{format('{0}{1}', github.workspace, '/node_modules')}}
+            key: ${{ runner.os }}-n-air-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+            restore-keys:
+              ${{ runner.os }}-n-air-
+        - run: npm install -g yarn
+        - run: yarn install
+  test:
+    strategy:
+      matrix:
+        tests: ["test:api", "test:e2e", "test:i18n", "test:unit"]
+    needs: yarn-install
+    runs-on: windows-latest
+    steps:
+        - uses: actions/checkout@v1
+        - uses: actions/setup-node@v1
+          with:
+            node-version: '10.x'
+        - uses: actions/cache@v1
+          with:
+            path: ${{format('{0}{1}', github.workspace, '/node_modules')}}
             key: ${{ runner.os }}-n-air-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
             restore-keys:
               ${{ runner.os }}-n-air-
         - run: npm install -g yarn
         - run: yarn install
         - run: yarn compile:ci
-        - run: yarn test:unit
-        - run: yarn test
+        - run: yarn ${{ matrix.tests }}
