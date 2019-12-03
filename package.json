@@ -163,7 +163,7 @@
     "pixelmatch": "^4.0.2",
     "pngjs": "^3.3.1",
     "prettier": "1.14.0",
-    "spectron": "^4.0.0",
+    "spectron": "^6.0.0",
     "style-loader": "^0.23.1",
     "ts-jest": "^24.0.2",
     "ts-loader": "^6.2.1",
